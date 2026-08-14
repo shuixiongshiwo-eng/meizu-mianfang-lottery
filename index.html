@@ -41,6 +41,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   box-shadow:0 4px 16px rgba(255,109,46,.4);font-size:18px;padding:14px 40px}
 .btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(255,109,46,.5)}
 .btn-start:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btnRow{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:6px}
+.btn-next{background:linear-gradient(135deg,var(--beike),#4d8bff);color:#fff;
+  box-shadow:0 4px 16px rgba(26,102,240,.32);font-size:17px;padding:13px 34px;opacity:.4;cursor:not-allowed;transition:.2s}
+.btn-next.live{opacity:1;cursor:pointer;animation:pulse 1.4s infinite}
+.btn-next.live:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(26,102,240,.5)}
+@keyframes pulse{0%,100%{box-shadow:0 4px 16px rgba(26,102,240,.32)}50%{box-shadow:0 4px 26px rgba(26,102,240,.6)}}
 .btn-ghost{background:#fff;border:1.5px solid var(--beike);color:var(--beike)}
 .btn-ghost:hover{background:var(--light)}
 .btn-warn{background:#fff;border:1.5px solid var(--red);color:var(--red)}
@@ -64,7 +70,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .drawZone .progress{font-size:13px;color:#999;margin-top:12px}
 .drawZone .done{display:none}
 .drawZone.showDone .done{display:block;animation:pop .4s}
-.drawZone.showDone .rollBox,.drawZone.showDone .btn-start{display:none}
+.drawZone.showDone .rollBox{display:none}
+.drawZone.showDone #drawBtn{display:none}
 @keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 .doneCard{width:300px;padding:26px;border-radius:20px;color:#fff;
   box-shadow:0 10px 30px rgba(0,0,0,.18)}
@@ -187,7 +194,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <div class="who" id="whoLabel">点击「开始抽签」启动</div>
     <div class="playerName" id="curPlayer"><span class="idx"></span><span id="curName"></span></div>
     <div class="rollBox"><div class="cardFace A" id="rollFace">A1</div></div>
-    <button class="btn btn-start" id="drawBtn">开始抽签</button>
+    <div class="btnRow">
+      <button class="btn btn-start" id="drawBtn">开始抽签</button>
+      <button class="btn btn-next" id="nextBtn" disabled style="display:none">下一位选手 →</button>
+    </div>
     <div class="progress" id="progress">尚未开始</div>
     <div class="done">
       <div class="doneCard A-bg" id="doneCard">
@@ -232,7 +242,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   let started=false;
 
   const $=id=>document.getElementById(id);
-  const rollFace=$('rollFace'), drawBtn=$('drawBtn'), drawZone=$('drawZone');
+  const rollFace=$('rollFace'), drawBtn=$('drawBtn'), nextBtn=$('nextBtn'), drawZone=$('drawZone');
   const whoLabel=$('whoLabel'), curName=$('curName'), curPlayer=$('curPlayer');
   const progress=$('progress'), doneCard=$('doneCard'), doneOwner=$('doneOwner'), doneSeq=$('doneSeq');
   const resultsBox=$('results');
@@ -278,7 +288,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     if(players.some(n=>!n)){alert('请补全16位选手姓名');return;}
     buildDeck(); buildOrder();
     curIdx=0; results={A:[],B:[],C:[],D:[]}; started=true;
-    drawBtn.textContent='抽！'; drawBtn.classList.add('btn-start');
+    drawBtn.style.display=''; drawBtn.textContent='抽签！'; drawBtn.disabled=false;
+    nextBtn.style.display=''; nextBtn.classList.remove('live'); nextBtn.disabled=true;
     resultsBox.classList.remove('hidden'); renderCols();
     drawZone.classList.remove('showDone');
     nextPlayer();
@@ -289,9 +300,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     const p=players[order[curIdx]];
     curPlayer.querySelector('.idx').textContent='#'+(curIdx+1);
     curName.textContent=p;
-    whoLabel.textContent='请选手上前抽签';
+    whoLabel.textContent='请该选手上前，点「抽签！」开始';
     progress.textContent='进度：'+curIdx+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
     drawBtn.textContent='抽签！'; drawBtn.disabled=false; rolling=false;
+    nextBtn.classList.remove('live'); nextBtn.disabled=true;
     drawZone.classList.remove('showDone');
   }
 
@@ -320,11 +332,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     rollFace.textContent=card.owner+card.seq;
     rollFace.className='cardFace '+card.owner;
     drawZone.classList.add('showDone');
-    whoLabel.textContent='抽签结果';
+    whoLabel.textContent='抽签结果（点「下一位选手 →」继续）';
     progress.textContent='进度：'+(curIdx+1)+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
     renderCols();
     curIdx++;
-    setTimeout(()=>{drawBtn.textContent='下一位 →'; drawBtn.disabled=false; rolling=false;},700);
+    drawBtn.disabled=true; rolling=false;
+    if(curIdx>=order.length){
+      // 最后一位抽完 → 直接进入完成态
+      finish(); return;
+    }
+    nextBtn.classList.add('live'); nextBtn.disabled=false;
   }
 
   function finish(){
@@ -333,19 +350,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     curName.textContent='抽签完成';
     whoLabel.textContent='全部16位选手抽签完毕，请核对下方对阵表并导出存档';
     progress.textContent='进度：'+order.length+'/'+order.length+' · 已完成';
-    drawBtn.textContent='重新抽签'; drawBtn.disabled=false;
+    drawBtn.style.display='none';
+    nextBtn.classList.remove('live'); nextBtn.disabled=false;
+    nextBtn.textContent='重新抽签 ↺';
     renderCols();
   }
 
   // 按钮事件
-  drawBtn.addEventListener('click',()=>{
-    if(!started||curIdx>=order.length){startDraw();return;}
-    if(rolling)return;
-    // 如果上一位已抽完(showDone状态且按钮显示"下一位")，则进入下一位
-    if(drawZone.classList.contains('showDone') && drawBtn.textContent.indexOf('下一位')>=0){nextPlayer();return;}
-    roll();
-  });
-
   $('resetBtn').addEventListener('click',()=>{
     if(!confirm('确认重置全部抽签结果？'))return;
     started=false; curIdx=0; deck=[]; order=[]; results={A:[],B:[],C:[],D:[]};
@@ -355,8 +366,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     curName.textContent='';
     rollFace.textContent='A1'; rollFace.className='cardFace A';
     progress.textContent='尚未开始';
-    drawBtn.textContent='开始抽签'; drawBtn.disabled=false; rolling=false;
+    drawBtn.style.display=''; drawBtn.textContent='开始抽签'; drawBtn.disabled=false;
+    nextBtn.style.display=''; nextBtn.textContent='下一位选手 →';
+    nextBtn.classList.remove('live'); nextBtn.disabled=true;
     resultsBox.classList.add('hidden');
+  });
+
+  drawBtn.addEventListener('click',()=>{
+    if(!started||curIdx>=order.length){startDraw();return;}
+    if(rolling)return;
+    roll();
+  });
+
+  nextBtn.addEventListener('click',()=>{
+    // 全部抽完 → 重新抽签
+    if(curIdx>=order.length){nextBtn.textContent='下一位选手 →'; startDraw();return;}
+    if(nextBtn.disabled)return;
+    nextPlayer();
   });
 
   $('randomBtn').addEventListener('click',()=>{
