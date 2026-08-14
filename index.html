@@ -26,13 +26,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 /* config card */
 .cfg{background:#fff;border-radius:16px;padding:22px 26px;margin-bottom:20px;
-  box-shadow:0 4px 18px rgba(15,61,140,.07);display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+  box-shadow:0 4px 18px rgba(15,61,140,.07);display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.cfg .secTitle{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.cfg .secTitle .bar{width:5px;height:22px;border-radius:3px}
+.cfg .secTitle h3{font-size:18px;color:var(--dark);letter-spacing:1px}
+.cfg .secTitle .tip{font-size:12px;color:#999;margin-left:auto}
 .cfg .lbl{font-size:13px;color:#555;margin-bottom:6px;font-weight:600}
 .cfg input[type=text]{border:1.5px solid #d8e3f5;border-radius:10px;padding:10px 12px;
   font-size:15px;width:150px;transition:.15s}
 .cfg input[type=text]:focus{outline:none;border-color:var(--beike);box-shadow:0 0 0 3px rgba(26,102,240,.12)}
 .field{display:flex;flex-direction:column}
+.ownerField .lbl{display:flex;align-items:center;gap:6px}
+.ownerField .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
 #ownerFields{display:contents}
+.secTools{width:100%;display:flex;gap:12px;justify-content:flex-end;margin-top:6px;padding-top:10px;border-top:1px dashed #e8f0fb}
 .btn{border:none;border-radius:11px;padding:12px 24px;font-size:15px;font-weight:600;
   cursor:pointer;transition:.18s;letter-spacing:1px}
 .btn-primary{background:var(--beike);color:#fff;box-shadow:0 4px 14px rgba(26,102,240,.3)}
@@ -119,72 +126,52 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <div class="sub">一层抽签：每位选手抽一张「业主+出场号」组合卡，一步定分组与出场顺序 · 业主组上场顺序固定 A→B→C→D</div>
   </div>
 
-  <!-- 配置 -->
-  <div class="cfg" id="cfgPanel">
-    <div class="field">
-      <div class="lbl">业主A（第1组上场）</div><input type="text" id="ownerA" value="陈姐" maxlength="8">
+  <!-- 业主板块 -->
+  <div class="cfg">
+    <div class="secTitle">
+      <div class="bar" style="background:var(--beike)"></div>
+      <h3>业主信息</h3>
+      <div class="tip">共4位业主 · 上场顺序固定 A→B→C→D</div>
     </div>
-    <div class="field">
-      <div class="lbl">业主B（第2组上场）</div><input type="text" id="ownerB" value="王总" maxlength="8">
+    <div class="field ownerField">
+      <div class="lbl"><span class="dot" style="background:var(--A)"></span>A · 第1组</div><input type="text" id="ownerA" value="陈姐" maxlength="8">
     </div>
-    <div class="field">
-      <div class="lbl">业主C（第3组上场）</div><input type="text" id="ownerC" value="刘阿姨" maxlength="8">
+    <div class="field ownerField">
+      <div class="lbl"><span class="dot" style="background:var(--B)"></span>B · 第2组</div><input type="text" id="ownerB" value="王总" maxlength="8">
     </div>
-    <div class="field">
-      <div class="lbl">业主D（第4组上场）</div><input type="text" id="ownerD" value="赵哥" maxlength="8">
+    <div class="field ownerField">
+      <div class="lbl"><span class="dot" style="background:var(--C)"></span>C · 第3组</div><input type="text" id="ownerC" value="刘阿姨" maxlength="8">
     </div>
-    <div class="field">
-      <div class="lbl">选手1</div><input type="text" class="player" value="选手1" maxlength="10">
+    <div class="field ownerField">
+      <div class="lbl"><span class="dot" style="background:var(--D)"></span>D · 第4组</div><input type="text" id="ownerD" value="赵哥" maxlength="8">
     </div>
-    <div class="field">
-      <div class="lbl">选手2</div><input type="text" class="player" value="选手2" maxlength="10">
+  </div>
+
+  <!-- 选手板块 -->
+  <div class="cfg">
+    <div class="secTitle">
+      <div class="bar" style="background:var(--orange)"></div>
+      <h3>选手名单</h3>
+      <div class="tip">共16位选手 · 抽签顺序随机打乱</div>
     </div>
-    <div class="field">
-      <div class="lbl">选手3</div><input type="text" class="player" value="选手3" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手4</div><input type="text" class="player" value="选手4" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手5</div><input type="text" class="player" value="选手5" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手6</div><input type="text" class="player" value="选手6" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手7</div><input type="text" class="player" value="选手7" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手8</div><input type="text" class="player" value="选手8" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手9</div><input type="text" class="player" value="选手9" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手10</div><input type="text" class="player" value="选手10" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手11</div><input type="text" class="player" value="选手11" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手12</div><input type="text" class="player" value="选手12" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手13</div><input type="text" class="player" value="选手13" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手14</div><input type="text" class="player" value="选手14" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手15</div><input type="text" class="player" value="选手15" maxlength="10">
-    </div>
-    <div class="field">
-      <div class="lbl">选手16</div><input type="text" class="player" value="选手16" maxlength="10">
-    </div>
-    <div class="field">
-      <button class="btn btn-ghost" id="randomBtn">随机抽号</button>
-    </div>
-    <div class="field">
+    <div class="field"><div class="lbl">选手1</div><input type="text" class="player" value="选手1" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手2</div><input type="text" class="player" value="选手2" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手3</div><input type="text" class="player" value="选手3" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手4</div><input type="text" class="player" value="选手4" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手5</div><input type="text" class="player" value="选手5" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手6</div><input type="text" class="player" value="选手6" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手7</div><input type="text" class="player" value="选手7" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手8</div><input type="text" class="player" value="选手8" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手9</div><input type="text" class="player" value="选手9" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手10</div><input type="text" class="player" value="选手10" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手11</div><input type="text" class="player" value="选手11" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手12</div><input type="text" class="player" value="选手12" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手13</div><input type="text" class="player" value="选手13" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手14</div><input type="text" class="player" value="选手14" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手15</div><input type="text" class="player" value="选手15" maxlength="10"></div>
+    <div class="field"><div class="lbl">选手16</div><input type="text" class="player" value="选手16" maxlength="10"></div>
+    <div class="secTools">
+      <button class="btn btn-ghost" id="randomBtn">随机填默认</button>
       <button class="btn btn-warn" id="resetBtn">重置全部</button>
     </div>
   </div>
