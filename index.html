@@ -115,16 +115,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   <!-- 配置 -->
   <div class="cfg" id="cfgPanel">
     <div class="field">
-      <div class="lbl">业主A（第1组上场）</div><input type="text" id="ownerA" value="业主A" maxlength="8">
+      <div class="lbl">业主A（第1组上场）</div><input type="text" id="ownerA" value="陈姐" maxlength="8">
     </div>
     <div class="field">
-      <div class="lbl">业主B（第2组上场）</div><input type="text" id="ownerB" value="业主B" maxlength="8">
+      <div class="lbl">业主B（第2组上场）</div><input type="text" id="ownerB" value="王总" maxlength="8">
     </div>
     <div class="field">
-      <div class="lbl">业主C（第3组上场）</div><input type="text" id="ownerC" value="业主C" maxlength="8">
+      <div class="lbl">业主C（第3组上场）</div><input type="text" id="ownerC" value="刘阿姨" maxlength="8">
     </div>
     <div class="field">
-      <div class="lbl">业主D（第4组上场）</div><input type="text" id="ownerD" value="业主D" maxlength="8">
+      <div class="lbl">业主D（第4组上场）</div><input type="text" id="ownerD" value="赵哥" maxlength="8">
     </div>
     <div class="field">
       <div class="lbl">选手1</div><input type="text" class="player" value="选手1" maxlength="10">
@@ -361,7 +361,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
   $('randomBtn').addEventListener('click',()=>{
     document.querySelectorAll('.player').forEach((inp,i)=>{inp.value='选手'+(i+1);});
-    document.querySelectorAll('input[id^="owner"]').forEach((inp,i)=>{inp.value='业主'+OWNERS[i];});
+    ['陈姐','王总','刘阿姨','赵哥'].forEach((n,i)=>{document.querySelectorAll('input[id^="owner"]')[i].value=n;});
   });
 
   // 导出Excel
