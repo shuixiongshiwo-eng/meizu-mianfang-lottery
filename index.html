@@ -100,13 +100,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .colHead.A{background:var(--A)} .colHead.B{background:var(--B)}
 .colHead.C{background:var(--C)} .colHead.D{background:var(--D)}
 .colBody{background:#fff;padding:8px}
-.slot{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+.slot{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;flex-wrap:wrap;
   margin-bottom:6px;background:var(--bg);border:1.5px dashed transparent;transition:.15s}
 .slot.filled{border-style:solid}
 .slot .seqNo{width:30px;height:30px;border-radius:8px;background:#fff;border:2px solid #d8e3f5;
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#666}
 .slot.filled .seqNo{background:var(--dark);color:#fff;border-color:var(--dark)}
-.slot .pname{font-size:15px;font-weight:600;color:#0F1E3D}
+.slot .pname{font-size:14px;font-weight:600;color:#0F1E3D;word-break:break-all}
 .slot.empty .pname{color:#bbb;font-weight:400}
 .slot.pending{border-color:var(--orange);background:#fff4ef;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.6}}
@@ -122,8 +122,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="wrap" id="root">
 
   <div class="header">
-    <h1>美租面访大赛决赛 · 出场顺序抽签<span class="badge">4业主 × 4选手</span></h1>
-    <div class="sub">一层抽签：每位选手抽一张「业主+出场号」组合卡，一步定分组与出场顺序 · 业主组上场顺序固定 A→B→C→D</div>
+    <h1>美租面访大赛决赛 · 出场顺序抽签<span class="badge">4业主 × 16组</span></h1>
+    <div class="sub">一层抽签：每组(资管·设计师)抽一张「业主+出场号」组合卡，一步定分组与出场顺序 · 业主组上场顺序固定 A→B→C→D</div>
   </div>
 
   <!-- 业主板块 -->
@@ -147,31 +147,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     </div>
   </div>
 
-  <!-- 选手板块 -->
+  <!-- 选手板块（参赛组，每组=资管+设计师搭档） -->
   <div class="cfg">
     <div class="secTitle">
       <div class="bar" style="background:var(--orange)"></div>
-      <h3>选手名单</h3>
-      <div class="tip">共16位选手 · 抽签顺序随机打乱</div>
+      <h3>参赛组名单</h3>
+      <div class="tip">共16组 · 每组(资管·设计师)一起抽1张业主卡 · 抽签顺序随机打乱</div>
     </div>
-    <div class="field"><div class="lbl">选手1</div><input type="text" class="player" value="选手1" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手2</div><input type="text" class="player" value="选手2" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手3</div><input type="text" class="player" value="选手3" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手4</div><input type="text" class="player" value="选手4" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手5</div><input type="text" class="player" value="选手5" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手6</div><input type="text" class="player" value="选手6" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手7</div><input type="text" class="player" value="选手7" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手8</div><input type="text" class="player" value="选手8" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手9</div><input type="text" class="player" value="选手9" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手10</div><input type="text" class="player" value="选手10" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手11</div><input type="text" class="player" value="选手11" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手12</div><input type="text" class="player" value="选手12" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手13</div><input type="text" class="player" value="选手13" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手14</div><input type="text" class="player" value="选手14" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手15</div><input type="text" class="player" value="选手15" maxlength="10"></div>
-    <div class="field"><div class="lbl">选手16</div><input type="text" class="player" value="选手16" maxlength="10"></div>
+    <div class="field"><div class="lbl">第1组（沪南）</div><input type="text" class="player" value="侯香如·张尧" maxlength="18"></div>
+    <div class="field"><div class="lbl">第2组（沪南）</div><input type="text" class="player" value="李鑫舒·田为杰" maxlength="18"></div>
+    <div class="field"><div class="lbl">第3组（沪东北）</div><input type="text" class="player" value="鲜强·位豆豆" maxlength="18"></div>
+    <div class="field"><div class="lbl">第4组（沪东北）</div><input type="text" class="player" value="王健·汤洁" maxlength="18"></div>
+    <div class="field"><div class="lbl">第5组（沪西）</div><input type="text" class="player" value="刘志伟·陈磊" maxlength="18"></div>
+    <div class="field"><div class="lbl">第6组（沪西）</div><input type="text" class="player" value="刘家海·杨阳" maxlength="18"></div>
+    <div class="field"><div class="lbl">第7组（沪东）</div><input type="text" class="player" value="乔雪·刘吴超" maxlength="18"></div>
+    <div class="field"><div class="lbl">第8组（沪东）</div><input type="text" class="player" value="季津津·寇永强" maxlength="18"></div>
+    <div class="field"><div class="lbl">第9组（沪东南）</div><input type="text" class="player" value="窦良保·卫家旭" maxlength="18"></div>
+    <div class="field"><div class="lbl">第10组（沪东南）</div><input type="text" class="player" value="李荣坤·吴阳" maxlength="18"></div>
+    <div class="field"><div class="lbl">第11组（沪北）</div><input type="text" class="player" value="丁海孝·陈华浩" maxlength="18"></div>
+    <div class="field"><div class="lbl">第12组（沪北）</div><input type="text" class="player" value="肖杰·李进" maxlength="18"></div>
+    <div class="field"><div class="lbl">第13组（待定）</div><input type="text" class="player" value="" maxlength="18" placeholder="待定"></div>
+    <div class="field"><div class="lbl">第14组（待定）</div><input type="text" class="player" value="" maxlength="18" placeholder="待定"></div>
+    <div class="field"><div class="lbl">第15组（待定）</div><input type="text" class="player" value="" maxlength="18" placeholder="待定"></div>
+    <div class="field"><div class="lbl">第16组（待定）</div><input type="text" class="player" value="" maxlength="18" placeholder="待定"></div>
     <div class="secTools">
-      <button class="btn btn-ghost" id="randomBtn">随机填默认</button>
+      <button class="btn btn-ghost" id="randomBtn">清空名单</button>
       <button class="btn btn-warn" id="resetBtn">重置全部</button>
     </div>
   </div>
@@ -183,7 +183,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <div class="rollBox"><div class="cardFace A" id="rollFace">A1</div></div>
     <div class="btnRow">
       <button class="btn btn-start" id="drawBtn">开始抽签</button>
-      <button class="btn btn-next" id="nextBtn" disabled style="display:none">下一位选手 →</button>
+      <button class="btn btn-next" id="nextBtn" disabled style="display:none">下一组 →</button>
     </div>
     <div class="progress" id="progress">尚未开始</div>
     <div class="done">
@@ -236,7 +236,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
   function readConfig(){
     OWNERS.forEach(k=>ownerNames[k]=$('owner'+k).value||('业主'+k));
-    players=Array.from(document.querySelectorAll('.player')).map(i=>i.value||('选手'));
+    players=Array.from(document.querySelectorAll('.player')).map(i=>i.value||(''));
     document.querySelectorAll('.colHead').forEach((h,i)=>{h.firstChild.textContent=ownerNames[OWNERS[i]];});
   }
 
@@ -272,7 +272,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
   function startDraw(){
     readConfig();
-    if(players.some(n=>!n)){alert('请补全16位选手姓名');return;}
+    if(players.some(n=>!n)){alert('请补全16组参赛名单（仍有未填的组）');return;}
     buildDeck(); buildOrder();
     curIdx=0; results={A:[],B:[],C:[],D:[]}; started=true;
     drawBtn.style.display=''; drawBtn.textContent='抽签！'; drawBtn.disabled=false;
@@ -287,7 +287,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     const p=players[order[curIdx]];
     curPlayer.querySelector('.idx').textContent='#'+(curIdx+1);
     curName.textContent=p;
-    whoLabel.textContent='请该选手上前，点「抽签！」开始';
+    whoLabel.textContent='请该组上前，点「抽签！」开始';
     progress.textContent='进度：'+curIdx+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
     drawBtn.textContent='抽签！'; drawBtn.disabled=false; rolling=false;
     nextBtn.classList.remove('live'); nextBtn.disabled=true;
@@ -319,7 +319,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     rollFace.textContent=card.owner+card.seq;
     rollFace.className='cardFace '+card.owner;
     drawZone.classList.add('showDone');
-    whoLabel.textContent='抽签结果（点「下一位选手 →」继续）';
+    whoLabel.textContent='抽签结果（点「下一组 →」继续）';
     progress.textContent='进度：'+(curIdx+1)+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
     renderCols();
     curIdx++;
@@ -335,7 +335,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     drawZone.classList.add('showDone');
     curPlayer.querySelector('.idx').textContent='✓';
     curName.textContent='抽签完成';
-    whoLabel.textContent='全部16位选手抽签完毕，请核对下方对阵表并导出存档';
+    whoLabel.textContent='全部16组抽签完毕，请核对下方对阵表并导出存档';
     progress.textContent='进度：'+order.length+'/'+order.length+' · 已完成';
     drawBtn.style.display='none';
     nextBtn.classList.remove('live'); nextBtn.disabled=false;
@@ -354,7 +354,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     rollFace.textContent='A1'; rollFace.className='cardFace A';
     progress.textContent='尚未开始';
     drawBtn.style.display=''; drawBtn.textContent='开始抽签'; drawBtn.disabled=false;
-    nextBtn.style.display=''; nextBtn.textContent='下一位选手 →';
+    nextBtn.style.display=''; nextBtn.textContent='下一组 →';
     nextBtn.classList.remove('live'); nextBtn.disabled=true;
     resultsBox.classList.add('hidden');
   });
@@ -367,21 +367,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
   nextBtn.addEventListener('click',()=>{
     // 全部抽完 → 重新抽签
-    if(curIdx>=order.length){nextBtn.textContent='下一位选手 →'; startDraw();return;}
+    if(curIdx>=order.length){nextBtn.textContent='下一组 →'; startDraw();return;}
     if(nextBtn.disabled)return;
     nextPlayer();
   });
 
   $('randomBtn').addEventListener('click',()=>{
-    document.querySelectorAll('.player').forEach((inp,i)=>{inp.value='选手'+(i+1);});
-    ['陈姐','王总','刘阿姨','赵哥'].forEach((n,i)=>{document.querySelectorAll('input[id^="owner"]')[i].value=n;});
+    if(!confirm('确认清空全部16组参赛名单？（业主名保留）'))return;
+    document.querySelectorAll('.player').forEach(inp=>{inp.value='';});
   });
 
   // 导出Excel
   $('exportXlsx').addEventListener('click',()=>{
     readConfig();
     const aoa=[['业主组上场顺序固定：A→B→C→D'],[],
-      ['业主组','组内出场顺序','选手姓名','抽中卡牌']];
+      ['业主组','组内出场顺序','参赛组（资管·设计师）','抽中卡牌']];
     const seqName=['一','二','三','四'];
     let globalOrder=0;
     OWNERS.forEach(o=>{
@@ -392,7 +392,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
       aoa.push([]);
     });
     const ws=XLSX.utils.aoa_to_sheet(aoa);
-    ws['!cols']=[{wch:18},{wch:24},{wch:14},{wch:12}];
+    ws['!cols']=[{wch:18},{wch:24},{wch:22},{wch:12}];
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,'出场对阵表');
     XLSX.writeFile(wb,'美租面访大赛出场对阵表.xlsx');
