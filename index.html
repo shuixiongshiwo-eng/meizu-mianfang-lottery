@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美租面访大赛决赛 · 出场顺序抽签</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --beike:#1A66F0; --dark:#0F3D8C; --light:#EAF2FF; --bg:#F5F9FF;
+  --orange:#FF6D2E; --green:#16A34A; --red:#DC2626; --gold:#B8860B;
+  --A:#1A66F0; --B:#FF6D2E; --C:#16A34A; --D:#B8860B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:#0F1E3D;min-height:100vh;padding:20px}
+.wrap{max-width:1280px;margin:0 auto}
+/* header */
+.header{background:linear-gradient(135deg,var(--dark),var(--beike));color:#fff;
+  border-radius:18px;padding:26px 32px;margin-bottom:22px;box-shadow:0 8px 30px rgba(15,61,140,.18)}
+.header h1{font-size:30px;letter-spacing:2px;margin-bottom:6px}
+.header .sub{font-size:15px;opacity:.88}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  padding:4px 12px;border-radius:20px;font-size:12px;margin-left:10px;vertical-align:middle}
+
+/* config card */
+.cfg{background:#fff;border-radius:16px;padding:22px 26px;margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(15,61,140,.07);display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end}
+.cfg .lbl{font-size:13px;color:#555;margin-bottom:6px;font-weight:600}
+.cfg input[type=text]{border:1.5px solid #d8e3f5;border-radius:10px;padding:10px 12px;
+  font-size:15px;width:150px;transition:.15s}
+.cfg input[type=text]:focus{outline:none;border-color:var(--beike);box-shadow:0 0 0 3px rgba(26,102,240,.12)}
+.field{display:flex;flex-direction:column}
+#ownerFields{display:contents}
+.btn{border:none;border-radius:11px;padding:12px 24px;font-size:15px;font-weight:600;
+  cursor:pointer;transition:.18s;letter-spacing:1px}
+.btn-primary{background:var(--beike);color:#fff;box-shadow:0 4px 14px rgba(26,102,240,.3)}
+.btn-primary:hover{background:var(--dark);transform:translateY(-1px)}
+.btn-start{background:linear-gradient(135deg,var(--orange),#ff8a52);color:#fff;
+  box-shadow:0 4px 16px rgba(255,109,46,.4);font-size:18px;padding:14px 40px}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(255,109,46,.5)}
+.btn-start:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn-ghost{background:#fff;border:1.5px solid var(--beike);color:var(--beike)}
+.btn-ghost:hover{background:var(--light)}
+.btn-warn{background:#fff;border:1.5px solid var(--red);color:var(--red)}
+.btn-warn:hover{background:#fff0f0}
+.btn-export{background:var(--green);color:#fff;box-shadow:0 4px 14px rgba(22,163,74,.28)}
+.btn-export:hover{transform:translateY(-1px)}
+.hint{font-size:12px;color:#888;margin-top:6px}
+
+/* draw zone */
+.drawZone{background:#fff;border-radius:18px;padding:30px;margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(15,61,140,.07);text-align:center;min-height:340px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.drawZone .who{font-size:16px;color:#666;margin-bottom:8px}
+.drawZone .playerName{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:18px;letter-spacing:2px}
+.drawZone .playerName .idx{font-size:20px;color:#999;font-weight:600;margin-right:10px}
+.rollBox{width:320px;height:130px;border:3px solid var(--beike);border-radius:20px;
+  background:linear-gradient(135deg,var(--light),#fff);display:flex;align-items:center;
+  justify-content:center;position:relative;overflow:hidden;margin-bottom:10px}
+.rollBox .cardFace{font-size:54px;font-weight:900;letter-spacing:3px;transition:transform .05s}
+.cardFace.A{color:var(--A)} .cardFace.B{color:var(--B)} .cardFace.C{color:var(--C)} .cardFace.D{color:var(--D)}
+.drawZone .progress{font-size:13px;color:#999;margin-top:12px}
+.drawZone .done{display:none}
+.drawZone.showDone .done{display:block;animation:pop .4s}
+.drawZone.showDone .rollBox,.drawZone.showDone .btn-start{display:none}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.doneCard{width:300px;padding:26px;border-radius:20px;color:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.doneCard .ownerTag{font-size:24px;font-weight:800;letter-spacing:2px}
+.doneCard .seq{font-size:18px;opacity:.92;margin-top:6px}
+.doneCard .seq b{font-size:30px;font-weight:900}
+.A-bg{background:linear-gradient(135deg,#1A66F0,#4d8bff)} .B-bg{background:linear-gradient(135deg,#FF6D2E,#ff8a52)}
+.C-bg{background:linear-gradient(135deg,#16A34A,#3fc06a)} .D-bg{background:linear-gradient(135deg,#B8860B,#e0a83a)}
+
+/* results table */
+.results{background:#fff;border-radius:18px;padding:24px 28px;margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(15,61,140,.07)}
+.results h2{font-size:20px;color:var(--dark);margin-bottom:4px}
+.results .rsSub{font-size:13px;color:#888;margin-bottom:16px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.col{border-radius:14px;overflow:hidden;border:1.5px solid #e8f0fb}
+.colHead{color:#fff;padding:12px 14px;font-size:17px;font-weight:800;letter-spacing:1px}
+.colHead .ot{font-size:12px;font-weight:500;opacity:.85;display:block;margin-top:2px}
+.colHead.A{background:var(--A)} .colHead.B{background:var(--B)}
+.colHead.C{background:var(--C)} .colHead.D{background:var(--D)}
+.colBody{background:#fff;padding:8px}
+.slot{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;
+  margin-bottom:6px;background:var(--bg);border:1.5px dashed transparent;transition:.15s}
+.slot.filled{border-style:solid}
+.slot .seqNo{width:30px;height:30px;border-radius:8px;background:#fff;border:2px solid #d8e3f5;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#666}
+.slot.filled .seqNo{background:var(--dark);color:#fff;border-color:var(--dark)}
+.slot .pname{font-size:15px;font-weight:600;color:#0F1E3D}
+.slot.empty .pname{color:#bbb;font-weight:400}
+.slot.pending{border-color:var(--orange);background:#fff4ef;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.6}}
+
+/* toolbar */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.hidden{display:none!important}
+.foot{text-align:center;color:#9aa6bd;font-size:12px;margin-top:24px;line-height:1.7}
+@media(max-width:900px){.cols{grid-template-columns:repeat(2,1fr)} .cfg{flex-direction:column;align-items:stretch}.cfg input{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+
+  <div class="header">
+    <h1>美租面访大赛决赛 · 出场顺序抽签<span class="badge">4业主 × 4选手</span></h1>
+    <div class="sub">一层抽签：每位选手抽一张「业主+出场号」组合卡，一步定分组与出场顺序 · 业主组上场顺序固定 A→B→C→D</div>
+  </div>
+
+  <!-- 配置 -->
+  <div class="cfg" id="cfgPanel">
+    <div class="field">
+      <div class="lbl">业主A（第1组上场）</div><input type="text" id="ownerA" value="业主A" maxlength="8">
+    </div>
+    <div class="field">
+      <div class="lbl">业主B（第2组上场）</div><input type="text" id="ownerB" value="业主B" maxlength="8">
+    </div>
+    <div class="field">
+      <div class="lbl">业主C（第3组上场）</div><input type="text" id="ownerC" value="业主C" maxlength="8">
+    </div>
+    <div class="field">
+      <div class="lbl">业主D（第4组上场）</div><input type="text" id="ownerD" value="业主D" maxlength="8">
+    </div>
+    <div class="field">
+      <div class="lbl">选手1</div><input type="text" class="player" value="选手1" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手2</div><input type="text" class="player" value="选手2" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手3</div><input type="text" class="player" value="选手3" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手4</div><input type="text" class="player" value="选手4" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手5</div><input type="text" class="player" value="选手5" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手6</div><input type="text" class="player" value="选手6" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手7</div><input type="text" class="player" value="选手7" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手8</div><input type="text" class="player" value="选手8" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手9</div><input type="text" class="player" value="选手9" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手10</div><input type="text" class="player" value="选手10" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手11</div><input type="text" class="player" value="选手11" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手12</div><input type="text" class="player" value="选手12" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手13</div><input type="text" class="player" value="选手13" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手14</div><input type="text" class="player" value="选手14" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手15</div><input type="text" class="player" value="选手15" maxlength="10">
+    </div>
+    <div class="field">
+      <div class="lbl">选手16</div><input type="text" class="player" value="选手16" maxlength="10">
+    </div>
+    <div class="field">
+      <button class="btn btn-ghost" id="randomBtn">随机抽号</button>
+    </div>
+    <div class="field">
+      <button class="btn btn-warn" id="resetBtn">重置全部</button>
+    </div>
+  </div>
+
+  <!-- 抽签区 -->
+  <div class="drawZone" id="drawZone">
+    <div class="who" id="whoLabel">点击「开始抽签」启动</div>
+    <div class="playerName" id="curPlayer"><span class="idx"></span><span id="curName"></span></div>
+    <div class="rollBox"><div class="cardFace A" id="rollFace">A1</div></div>
+    <button class="btn btn-start" id="drawBtn">开始抽签</button>
+    <div class="progress" id="progress">尚未开始</div>
+    <div class="done">
+      <div class="doneCard A-bg" id="doneCard">
+        <div class="ownerTag" id="doneOwner">业主A</div>
+        <div class="seq">第 <b id="doneSeq">1</b> 个出场</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 对阵结果 -->
+  <div class="results hidden" id="results">
+    <h2>出战对阵表</h2>
+    <div class="rsSub" id="rsSub">业主组上场顺序固定：A → B → C → D，组内按抽中出场号顺序</div>
+    <div class="cols">
+      <div class="col"><div class="colHead A">业主A<span class="ot">第1组上场</span></div><div class="colBody" id="colA"></div></div>
+      <div class="col"><div class="colHead B">业主B<span class="ot">第2组上场</span></div><div class="colBody" id="colB"></div></div>
+      <div class="col"><div class="colHead C">业主C<span class="ot">第3组上场</span></div><div class="colBody" id="colC"></div></div>
+      <div class="col"><div class="colHead D">业主D<span class="ot">第4组上场</span></div><div class="colBody" id="colD"></div></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-export" id="exportImg">导出对阵表图片</button>
+      <button class="btn btn-export" id="exportXlsx">导出对阵表 Excel</button>
+    </div>
+  </div>
+
+  <div class="foot">
+    美租面访大赛决赛 · 出场顺序抽签系统<br>
+    贝壳惠居美租事业部 · 公平公正公开 · 抽签结果可导出存档公证
+  </div>
+</div>
+
+<script>
+(function(){
+  const OWNERS=['A','B','C','D'];
+  const ownerNames={A:'业主A',B:'业主B',C:'业主C',D:'业主D'};
+  let deck=[];          // 剩余卡牌 [{owner,seq}]
+  let players=[];       // 选手名数组(16)
+  let order=[];         // 抽签顺序(选手索引)
+  let curIdx=0;         // 当前抽签者序号
+  let rolling=false;
+  let results={A:[],B:[],C:[],D:[]}; // 每业主已抽中 [{seq,name}]
+  let started=false;
+
+  const $=id=>document.getElementById(id);
+  const rollFace=$('rollFace'), drawBtn=$('drawBtn'), drawZone=$('drawZone');
+  const whoLabel=$('whoLabel'), curName=$('curName'), curPlayer=$('curPlayer');
+  const progress=$('progress'), doneCard=$('doneCard'), doneOwner=$('doneOwner'), doneSeq=$('doneSeq');
+  const resultsBox=$('results');
+
+  function readConfig(){
+    OWNERS.forEach(k=>ownerNames[k]=$('owner'+k).value||('业主'+k));
+    players=Array.from(document.querySelectorAll('.player')).map(i=>i.value||('选手'));
+    document.querySelectorAll('.colHead').forEach((h,i)=>{h.firstChild.textContent=ownerNames[OWNERS[i]];});
+  }
+
+  function buildDeck(){
+    deck=[];
+    OWNERS.forEach(o=>{for(let s=1;s<=4;s++)deck.push({owner:o,seq:s});});
+    // Fisher-Yates
+    for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  }
+
+  function buildOrder(){
+    order=players.map((_,i)=>i);
+    for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  }
+
+  function renderCols(){
+    OWNERS.forEach(o=>{
+      const body=$('col'+o); body.innerHTML='';
+      for(let s=1;s<=4;s++){
+        const r=results[o].find(x=>x.seq===s);
+        const slot=document.createElement('div');
+        slot.className='slot'+(r?' filled':' empty');
+        const no=document.createElement('div'); no.className='seqNo'; no.textContent=s;
+        const nm=document.createElement('div'); nm.className='pname'; nm.textContent=r?r.name:'待抽签';
+        slot.append(no,nm); body.append(slot);
+      }
+    });
+  }
+
+  function markPending(){
+    // 当前选手即将抽到的位置先不标，保持悬念
+  }
+
+  function startDraw(){
+    readConfig();
+    if(players.some(n=>!n)){alert('请补全16位选手姓名');return;}
+    buildDeck(); buildOrder();
+    curIdx=0; results={A:[],B:[],C:[],D:[]}; started=true;
+    drawBtn.textContent='抽！'; drawBtn.classList.add('btn-start');
+    resultsBox.classList.remove('hidden'); renderCols();
+    drawZone.classList.remove('showDone');
+    nextPlayer();
+  }
+
+  function nextPlayer(){
+    if(curIdx>=order.length){finish();return;}
+    const p=players[order[curIdx]];
+    curPlayer.querySelector('.idx').textContent='#'+(curIdx+1);
+    curName.textContent=p;
+    whoLabel.textContent='请选手上前抽签';
+    progress.textContent='进度：'+curIdx+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
+    drawBtn.textContent='抽签！'; drawBtn.disabled=false; rolling=false;
+    drawZone.classList.remove('showDone');
+  }
+
+  function roll(){
+    if(rolling||curIdx>=order.length)return;
+    rolling=true; drawBtn.disabled=true;
+    let t=0; const dur=1400;
+    const iv=setInterval(()=>{
+      const c=deck[Math.floor(Math.random()*deck.length)];
+      rollFace.textContent=c.owner+c.seq;
+      rollFace.className='cardFace '+c.owner;
+      t+=70;
+      if(t>=dur){clearInterval(iv); settle();}
+    },70);
+  }
+
+  function settle(){
+    // 真实从牌堆抽一张
+    const idx=Math.floor(Math.random()*deck.length);
+    const card=deck.splice(idx,1)[0];
+    results[card.owner].push({seq:card.seq,name:players[order[curIdx]]});
+    // 展示结果
+    doneOwner.textContent=ownerNames[card.owner]+' ('+card.owner+')';
+    doneSeq.textContent=card.seq;
+    doneCard.className='doneCard '+card.owner+'-bg';
+    rollFace.textContent=card.owner+card.seq;
+    rollFace.className='cardFace '+card.owner;
+    drawZone.classList.add('showDone');
+    whoLabel.textContent='抽签结果';
+    progress.textContent='进度：'+(curIdx+1)+'/'+order.length+' · 剩余卡牌 '+deck.length+' 张';
+    renderCols();
+    curIdx++;
+    setTimeout(()=>{drawBtn.textContent='下一位 →'; drawBtn.disabled=false; rolling=false;},700);
+  }
+
+  function finish(){
+    drawZone.classList.add('showDone');
+    curPlayer.querySelector('.idx').textContent='✓';
+    curName.textContent='抽签完成';
+    whoLabel.textContent='全部16位选手抽签完毕，请核对下方对阵表并导出存档';
+    progress.textContent='进度：'+order.length+'/'+order.length+' · 已完成';
+    drawBtn.textContent='重新抽签'; drawBtn.disabled=false;
+    renderCols();
+  }
+
+  // 按钮事件
+  drawBtn.addEventListener('click',()=>{
+    if(!started||curIdx>=order.length){startDraw();return;}
+    if(rolling)return;
+    // 如果上一位已抽完(showDone状态且按钮显示"下一位")，则进入下一位
+    if(drawZone.classList.contains('showDone') && drawBtn.textContent.indexOf('下一位')>=0){nextPlayer();return;}
+    roll();
+  });
+
+  $('resetBtn').addEventListener('click',()=>{
+    if(!confirm('确认重置全部抽签结果？'))return;
+    started=false; curIdx=0; deck=[]; order=[]; results={A:[],B:[],C:[],D:[]};
+    drawZone.classList.remove('showDone');
+    whoLabel.textContent='点击「开始抽签」启动';
+    curPlayer.querySelector('.idx').textContent='';
+    curName.textContent='';
+    rollFace.textContent='A1'; rollFace.className='cardFace A';
+    progress.textContent='尚未开始';
+    drawBtn.textContent='开始抽签'; drawBtn.disabled=false; rolling=false;
+    resultsBox.classList.add('hidden');
+  });
+
+  $('randomBtn').addEventListener('click',()=>{
+    document.querySelectorAll('.player').forEach((inp,i)=>{inp.value='选手'+(i+1);});
+    document.querySelectorAll('input[id^="owner"]').forEach((inp,i)=>{inp.value='业主'+OWNERS[i];});
+  });
+
+  // 导出Excel
+  $('exportXlsx').addEventListener('click',()=>{
+    readConfig();
+    const aoa=[['业主组上场顺序固定：A→B→C→D'],[],
+      ['业主组','组内出场顺序','选手姓名','抽中卡牌']];
+    const seqName=['一','二','三','四'];
+    let globalOrder=0;
+    OWNERS.forEach(o=>{
+      for(let s=1;s<=4;s++){
+        const r=results[o].find(x=>x.seq===s);
+        aoa.push([ownerNames[o]+' ('+o+')','第'+seqName[s-1]+'位出场（'+s+'）',r?r.name:'',r?(o+r.seq):'']);
+      }
+      aoa.push([]);
+    });
+    const ws=XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols']=[{wch:18},{wch:24},{wch:14},{wch:12}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'出场对阵表');
+    XLSX.writeFile(wb,'美租面访大赛出场对阵表.xlsx');
+  });
+
+  // 导出图片
+  $('exportImg').addEventListener('click',()=>{
+    if(typeof html2canvas==='undefined'){alert('图片库加载中，请稍后重试');return;}
+    html2canvas(resultsBox,{backgroundColor:'#ffffff',scale:2}).then(canvas=>{
+      const a=document.createElement('a');
+      a.download='美租面访大赛出场对阵表.png';
+      a.href=canvas.toDataURL('image/png');
+      a.click();
+    });
+  });
+
+  // 初始
+  renderCols();
+})();
+</script>
+</body>
+</html>
